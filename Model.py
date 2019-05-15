@@ -10,8 +10,7 @@ desc:
 """
 from tensorflow.keras import layers
 from tensorflow.keras.models import Model
-import oct_conv, oct_convmlp
-
+import oct_conv
 
 def _create_normal_residual_block(inputs, ch, N):
     # Conv with skip connections
