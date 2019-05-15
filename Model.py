@@ -179,6 +179,8 @@ def create_octconvmlp_wide_resnet(alpha, N=4, k=10):
     high, low = oct_conv.OctConv2D(filters=16, alpha=alpha)([input, low])
     high = layers.Conv2D(int(16*(1-alpha)), 1)(input)
     low = layers.Conv2D(int(16*alpha), 1)(low)
+    high = layers.Conv2D(int(16*(1-alpha)), 1)(input)
+    low = layers.Conv2D(int(16*alpha), 1)(low)
     high = layers.BatchNormalization()(high)
     high = layers.Activation("relu")(high)
     low = layers.BatchNormalization()(low)
