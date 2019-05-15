@@ -1,13 +1,5 @@
 # coding:utf-8
-# /usr/bin/env python
 
-"""
-Author: Hanoch
-Email: hewersef@gmail.com
-
-date: 2019/5/15 9:16
-desc:
-"""
 from tensorflow.keras import layers
 from tensorflow.keras.models import Model
 import oct_conv
@@ -83,12 +75,16 @@ def _create_octconvmlp_residual_block(inputs, ch, N, alpha):
         high, low = oct_conv.OctConv2D(filters=ch, alpha=alpha)([high, low])
         high = layers.Conv2D(int(ch*(1-alpha)), 1)(high)
         low = layers.Conv2D(int(ch*alpha), 1)(low)
+        high = layers.Conv2D(int(ch*(1-alpha)), 1)(high)
+        low = layers.Conv2D(int(ch*alpha), 1)(low)
         high = layers.BatchNormalization()(high)
         high = layers.Activation("relu")(high)
         low = layers.BatchNormalization()(low)
         low = layers.Activation("relu")(low)
 
-        high, low = oct_conv.OctConv2D(filters=ch, alpha=alpha)([high, low])        
+        high, low = oct_conv.OctConv2D(filters=ch, alpha=alpha)([high, low])
+        high = layers.Conv2D(int(ch*(1-alpha)), 1)(high)
+        low = layers.Conv2D(int(ch*alpha), 1)(low)
         high = layers.Conv2D(int(ch*(1-alpha)), 1)(high)
         low = layers.Conv2D(int(ch*alpha), 1)(low)
         high = layers.BatchNormalization()(high)
@@ -177,9 +173,9 @@ def create_octconvmlp_wide_resnet(alpha, N=4, k=10):
 
     # 16 channels block
     high, low = oct_conv.OctConv2D(filters=16, alpha=alpha)([input, low])
-    high = layers.Conv2D(int(16*(1-alpha)), 1)(input)
+    high = layers.Conv2D(int(16*(1-alpha)), 1)(high)
     low = layers.Conv2D(int(16*alpha), 1)(low)
-    high = layers.Conv2D(int(16*(1-alpha)), 1)(input)
+    high = layers.Conv2D(int(16*(1-alpha)), 1)(high)
     low = layers.Conv2D(int(16*alpha), 1)(low)
     high = layers.BatchNormalization()(high)
     high = layers.Activation("relu")(high)
@@ -302,84 +298,84 @@ def create_octcovmlp_vgg(alpha):
     low = layers.AveragePooling2D(2)(input)
 
     # Block 1
-    high, low = oct_conv.OctConv2D(filters=64, alpha=alpha, kernel_size=(3, 3), activation='relu', padding='same')([input, low])        
+    high, low = oct_conv.OctConv2D(filters=64, alpha=alpha, kernel_size=(3, 3), activation='relu', padding='same')([input, low])
     high = layers.Conv2D(int(64*(1-alpha)), 1)(high)
-    low = layers.Conv2D(int(64*alpha), 1)(low)        
+    low = layers.Conv2D(int(64*alpha), 1)(low)
     high = layers.Conv2D(int(64*(1-alpha)), 1)(high)
     low = layers.Conv2D(int(64*alpha), 1)(low)
 
-    high, low  = oct_conv.OctConv2D(filters=64, alpha=alpha, kernel_size=(3, 3), activation='relu', padding='same')([high, low ])        
+    high, low  = oct_conv.OctConv2D(filters=64, alpha=alpha, kernel_size=(3, 3), activation='relu', padding='same')([high, low ])
     high = layers.Conv2D(int(64*(1-alpha)), 1)(high)
-    low = layers.Conv2D(int(64*alpha), 1)(low)        
+    low = layers.Conv2D(int(64*alpha), 1)(low)
     high = layers.Conv2D(int(64*(1-alpha)), 1)(high)
     low = layers.Conv2D(int(64*alpha), 1)(low)
 
     # Block 2
-    high, low = oct_conv.OctConv2D(filters=128, alpha=alpha, kernel_size=(3, 3), activation='relu', padding='same')([high, low])        
-    high = layers.Conv2D(int(128*(1-alpha)), 1)(high)
-    low = layers.Conv2D(int(128*alpha), 1)(low)        
+    high, low = oct_conv.OctConv2D(filters=128, alpha=alpha, kernel_size=(3, 3), activation='relu', padding='same')([high, low])
     high = layers.Conv2D(int(128*(1-alpha)), 1)(high)
     low = layers.Conv2D(int(128*alpha), 1)(low)
-    high, low = oct_conv.OctConv2D(filters=128, alpha=alpha, kernel_size=(3, 3), activation='relu', padding='same')([high, low])        
     high = layers.Conv2D(int(128*(1-alpha)), 1)(high)
-    low = layers.Conv2D(int(128*alpha), 1)(low)        
+    low = layers.Conv2D(int(128*alpha), 1)(low)
+    high, low = oct_conv.OctConv2D(filters=128, alpha=alpha, kernel_size=(3, 3), activation='relu', padding='same')([high, low])
+    high = layers.Conv2D(int(128*(1-alpha)), 1)(high)
+    low = layers.Conv2D(int(128*alpha), 1)(low)
     high = layers.Conv2D(int(128*(1-alpha)), 1)(high)
     low = layers.Conv2D(int(128*alpha), 1)(low)
     high = layers.MaxPooling2D((2, 2), strides=(2, 2))(high)
     low = layers.MaxPooling2D((2, 2), strides=(2, 2))(low)
 
     # Block 3
-    high, low = oct_conv.OctConv2D(filters=256, alpha=alpha, kernel_size=(3, 3), activation='relu', padding='same')([high, low])        
-    high = layers.Conv2D(int(256*(1-alpha)), 1)(high)
-    low = layers.Conv2D(int(256*alpha), 1)(low)        
+    high, low = oct_conv.OctConv2D(filters=256, alpha=alpha, kernel_size=(3, 3), activation='relu', padding='same')([high, low])
     high = layers.Conv2D(int(256*(1-alpha)), 1)(high)
     low = layers.Conv2D(int(256*alpha), 1)(low)
-    high, low = oct_conv.OctConv2D(filters=256, alpha=alpha, kernel_size=(3, 3), activation='relu', padding='same')([high, low])        
-    high = layers.Conv2D(int(256*(1-alpha)), 1)(high)
-    low = layers.Conv2D(int(256*alpha), 1)(low)        
     high = layers.Conv2D(int(256*(1-alpha)), 1)(high)
     low = layers.Conv2D(int(256*alpha), 1)(low)
-    high, low = oct_conv.OctConv2D(filters=256, alpha=alpha, kernel_size=(3, 3), activation='relu', padding='same')([high, low])        
+    high, low = oct_conv.OctConv2D(filters=256, alpha=alpha, kernel_size=(3, 3), activation='relu', padding='same')([high, low])
     high = layers.Conv2D(int(256*(1-alpha)), 1)(high)
-    low = layers.Conv2D(int(256*alpha), 1)(low)        
+    low = layers.Conv2D(int(256*alpha), 1)(low)
+    high = layers.Conv2D(int(256*(1-alpha)), 1)(high)
+    low = layers.Conv2D(int(256*alpha), 1)(low)
+    high, low = oct_conv.OctConv2D(filters=256, alpha=alpha, kernel_size=(3, 3), activation='relu', padding='same')([high, low])
+    high = layers.Conv2D(int(256*(1-alpha)), 1)(high)
+    low = layers.Conv2D(int(256*alpha), 1)(low)
     high = layers.Conv2D(int(256*(1-alpha)), 1)(high)
     low = layers.Conv2D(int(256*alpha), 1)(low)
     high = layers.MaxPooling2D((2, 2), strides=(2, 2))(high)
     low = layers.MaxPooling2D((2, 2), strides=(2, 2))(low)
 
     # Block 4
-    high, low = oct_conv.OctConv2D(filters=512, alpha=alpha, kernel_size=(3, 3), activation='relu', padding='same')([high, low])        
-    high = layers.Conv2D(int(512*(1-alpha)), 1)(high)
-    low = layers.Conv2D(int(512*alpha), 1)(low)        
+    high, low = oct_conv.OctConv2D(filters=512, alpha=alpha, kernel_size=(3, 3), activation='relu', padding='same')([high, low])
     high = layers.Conv2D(int(512*(1-alpha)), 1)(high)
     low = layers.Conv2D(int(512*alpha), 1)(low)
-    high, low = oct_conv.OctConv2D(filters=512, alpha=alpha, kernel_size=(3, 3), activation='relu', padding='same')([high, low])        
-    high = layers.Conv2D(int(512*(1-alpha)), 1)(high)
-    low = layers.Conv2D(int(512*alpha), 1)(low)        
     high = layers.Conv2D(int(512*(1-alpha)), 1)(high)
     low = layers.Conv2D(int(512*alpha), 1)(low)
-    high, low = oct_conv.OctConv2D(filters=512, alpha=alpha, kernel_size=(3, 3), activation='relu', padding='same')([high, low])        
+    high, low = oct_conv.OctConv2D(filters=512, alpha=alpha, kernel_size=(3, 3), activation='relu', padding='same')([high, low])
     high = layers.Conv2D(int(512*(1-alpha)), 1)(high)
-    low = layers.Conv2D(int(512*alpha), 1)(low)        
+    low = layers.Conv2D(int(512*alpha), 1)(low)
+    high = layers.Conv2D(int(512*(1-alpha)), 1)(high)
+    low = layers.Conv2D(int(512*alpha), 1)(low)
+    high, low = oct_conv.OctConv2D(filters=512, alpha=alpha, kernel_size=(3, 3), activation='relu', padding='same')([high, low])
+    high = layers.Conv2D(int(512*(1-alpha)), 1)(high)
+    low = layers.Conv2D(int(512*alpha), 1)(low)
     high = layers.Conv2D(int(512*(1-alpha)), 1)(high)
     low = layers.Conv2D(int(512*alpha), 1)(low)
     high = layers.MaxPooling2D((2, 2), strides=(2, 2))(high)
     low = layers.MaxPooling2D((2, 2), strides=(2, 2))(low)
 
     # Block 5
-    high, low = oct_conv.OctConv2D(filters=512, alpha=alpha, kernel_size=(3, 3), activation='relu', padding='same')([high, low])        
-    high = layers.Conv2D(int(512*(1-alpha)), 1)(high)
-    low = layers.Conv2D(int(512*alpha), 1)(low)        
+    high, low = oct_conv.OctConv2D(filters=512, alpha=alpha, kernel_size=(3, 3), activation='relu', padding='same')([high, low])
     high = layers.Conv2D(int(512*(1-alpha)), 1)(high)
     low = layers.Conv2D(int(512*alpha), 1)(low)
-    high, low = oct_conv.OctConv2D(filters=512, alpha=alpha, kernel_size=(3, 3), activation='relu', padding='same')([high, low])        
-    high = layers.Conv2D(int(512*(1-alpha)), 1)(high)
-    low = layers.Conv2D(int(512*alpha), 1)(low)        
     high = layers.Conv2D(int(512*(1-alpha)), 1)(high)
     low = layers.Conv2D(int(512*alpha), 1)(low)
-    high, low = oct_conv.OctConv2D(filters=512, alpha=alpha, kernel_size=(3, 3), activation='relu', padding='same')([high, low])        
+    high, low = oct_conv.OctConv2D(filters=512, alpha=alpha, kernel_size=(3, 3), activation='relu', padding='same')([high, low])
     high = layers.Conv2D(int(512*(1-alpha)), 1)(high)
-    low = layers.Conv2D(int(512*alpha), 1)(low)        
+    low = layers.Conv2D(int(512*alpha), 1)(low)
+    high = layers.Conv2D(int(512*(1-alpha)), 1)(high)
+    low = layers.Conv2D(int(512*alpha), 1)(low)
+    high, low = oct_conv.OctConv2D(filters=512, alpha=alpha, kernel_size=(3, 3), activation='relu', padding='same')([high, low])
+    high = layers.Conv2D(int(512*(1-alpha)), 1)(high)
+    low = layers.Conv2D(int(512*alpha), 1)(low)
     high = layers.Conv2D(int(512*(1-alpha)), 1)(high)
     low = layers.Conv2D(int(512*alpha), 1)(low)
 
