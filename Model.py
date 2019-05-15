@@ -165,7 +165,7 @@ def create_octconv_wide_resnet(alpha, N=4, k=10):
 
 def create_octconvmlp_wide_resnet(alpha, N=4, k=10):
     """
-    Create OctConv Wide ResNet(N=4, k=10)
+    Create OctConvmlp Wide ResNet(N=4, k=10)
     """
     # Input
     input = layers.Input((32,32,3))
