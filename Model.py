@@ -220,13 +220,13 @@ def create_normal_vgg():
     x = layers.Conv2D(256, (3, 3), activation='relu', padding='same')(x)
     x = layers.Conv2D(256, (3, 3), activation='relu', padding='same')(x)
     x = layers.Conv2D(256, (3, 3), activation='relu', padding='same')(x)
-    x = MaxPooling2D((2, 2), strides=(2, 2))(x)
+    x = layers.MaxPooling2D((2, 2), strides=(2, 2))(x)
 
     # Block 4
     x = layers.Conv2D(512, (3, 3), activation='relu', padding='same')(x)
     x = layers.Conv2D(512, (3, 3), activation='relu', padding='same')(x)
     x = layers.Conv2D(512, (3, 3), activation='relu', padding='same')(x)
-    x = MaxPooling2D((2, 2), strides=(2, 2))(x)
+    x = layers.MaxPooling2D((2, 2), strides=(2, 2))(x)
 
     # Block 5
     x = layers.Conv2D(512, (3, 3), activation='relu', padding='same')(x)
