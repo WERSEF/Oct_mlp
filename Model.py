@@ -75,12 +75,16 @@ def _create_octconvmlp_residual_block(inputs, ch, N, alpha):
         high, low = oct_conv.OctConv2D(filters=ch, alpha=alpha)([high, low])
         high = layers.Conv2D(int(ch*(1-alpha)), 1)(high)
         low = layers.Conv2D(int(ch*alpha), 1)(low)
+        high = layers.Conv2D(int(ch*(1-alpha)), 1)(high)
+        low = layers.Conv2D(int(ch*alpha), 1)(low)
         high = layers.BatchNormalization()(high)
         high = layers.Activation("relu")(high)
         low = layers.BatchNormalization()(low)
         low = layers.Activation("relu")(low)
 
         high, low = oct_conv.OctConv2D(filters=ch, alpha=alpha)([high, low])
+        high = layers.Conv2D(int(ch*(1-alpha)), 1)(high)
+        low = layers.Conv2D(int(ch*alpha), 1)(low)
         high = layers.Conv2D(int(ch*(1-alpha)), 1)(high)
         low = layers.Conv2D(int(ch*alpha), 1)(low)
         high = layers.BatchNormalization()(high)
@@ -171,6 +175,8 @@ def create_octconvmlp_wide_resnet(alpha, N=4, k=10):
     high, low = oct_conv.OctConv2D(filters=16, alpha=alpha)([input, low])
     high = layers.Conv2D(int(16*(1-alpha)), 1)(high)
     low = layers.Conv2D(int(16*alpha), 1)(low)
+    high = layers.Conv2D(int(16*(1-alpha)), 1)(high)
+    low = layers.Conv2D(int(16*alpha), 1)(low)
     high = layers.BatchNormalization()(high)
     high = layers.Activation("relu")(high)
     low = layers.BatchNormalization()(low)
@@ -213,21 +219,21 @@ def create_normal_vgg():
     x = layers.MaxPooling2D((2, 2), strides=(2, 2))(x)
 
     # Block 3
-    x = Conv2D(256, (3, 3), activation='relu', padding='same')(x)
-    x = Conv2D(256, (3, 3), activation='relu', padding='same')(x)
-    x = Conv2D(256, (3, 3), activation='relu', padding='same')(x)
+    x = layers.Conv2D(256, (3, 3), activation='relu', padding='same')(x)
+    x = layers.Conv2D(256, (3, 3), activation='relu', padding='same')(x)
+    x = layers.Conv2D(256, (3, 3), activation='relu', padding='same')(x)
     x = MaxPooling2D((2, 2), strides=(2, 2))(x)
 
     # Block 4
-    x = Conv2D(512, (3, 3), activation='relu', padding='same')(x)
-    x = Conv2D(512, (3, 3), activation='relu', padding='same')(x)
-    x = Conv2D(512, (3, 3), activation='relu', padding='same')(x)
+    x = layers.Conv2D(512, (3, 3), activation='relu', padding='same')(x)
+    x = layers.Conv2D(512, (3, 3), activation='relu', padding='same')(x)
+    x = layers.Conv2D(512, (3, 3), activation='relu', padding='same')(x)
     x = MaxPooling2D((2, 2), strides=(2, 2))(x)
 
     # Block 5
-    x = Conv2D(512, (3, 3), activation='relu', padding='same')(x)
-    x = Conv2D(512, (3, 3), activation='relu', padding='same')(x)
-    x = Conv2D(512, (3, 3), activation='relu', padding='same')(x)
+    x = layers.Conv2D(512, (3, 3), activation='relu', padding='same')(x)
+    x = layers.Conv2D(512, (3, 3), activation='relu', padding='same')(x)
+    x = layers.Conv2D(512, (3, 3), activation='relu', padding='same')(x)
 
     # FC
     x = layers.GlobalAveragePooling2D()(x)
