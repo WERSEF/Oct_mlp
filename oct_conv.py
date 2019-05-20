@@ -35,8 +35,8 @@ class OctConv2D(layers.Layer):
         assert len(input_shape) == 2
         assert len(input_shape[0]) == 4 and len(input_shape[1]) == 4
         # Assertion for high inputs
-        assert input_shape[0][1] // 2 >= self.kernel_size[0]
-        assert input_shape[0][2] // 2 >= self.kernel_size[1]
+        # assert input_shape[0][1] // 2 >= self.kernel_size[0]
+        # assert input_shape[0][2] // 2 >= self.kernel_size[1]
         # Assertion for low inputs
         assert input_shape[0][1] // input_shape[1][1] == 2
         assert input_shape[0][2] // input_shape[1][2] == 2
